@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-const API_URL = 'https://beware-backend.onrender.com/api';
+const API_URL = 'https://beware-1.onrender.com/api';
 
 function App() {
     const [token, setToken] = useState(localStorage.getItem('token'));
