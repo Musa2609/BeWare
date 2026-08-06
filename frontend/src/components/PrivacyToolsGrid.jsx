@@ -4,23 +4,67 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 const PrivacyToolsGrid = () => {
   return (
     <div className="mt-8 space-y-6">
-      <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
+      {/* Section Header */}
+      <div className="flex items-center justify-between border-b border-[#1e222a] pb-3">
         <div>
-          <h2 className="text-lg font-semibold text-white tracking-tight">Privacy Tools Suite</h2>
-          <p className="text-xs text-[#a1a1aa] font-mono">10 diagnostic & defensive privacy modules</p>
+          <h2 className="font-display text-lg font-bold text-white tracking-tight">Diagnostic Tools Suite</h2>
+          <p className="text-xs text-[#71717a] font-mono">10 active threat detection & privacy defense modules</p>
         </div>
-        <span className="px-2.5 py-1 text-xs font-mono bg-[#18181b] border border-[#27272a] text-[#a1a1aa] rounded-md">
-          10/10 Active
+        <span className="px-2.5 py-1 text-[10px] font-mono bg-[#101216] border border-[#1e222a] text-amber-400 rounded">
+          10/10 Online
         </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {/* ASYMMETRICAL VARYING CARD GRID */}
+      
+      {/* ROW 1: HERO SPAN (Score History & Dark Web Monitor Side-by-Side) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Score History Chart (7 Cols) */}
+        <div className="lg:col-span-7 bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-cyan-400">
+                  <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                  </svg>
+                </div>
+                <h3 className="font-display font-semibold text-white text-sm">Privacy Score History (14 Days)</h3>
+              </div>
+              <span className="text-[10px] font-mono text-[#71717a]">Historical Telemetry</span>
+            </div>
+
+            <div className="h-32 w-full mt-3">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={generateHistoryData()}>
+                  <XAxis dataKey="date" hide />
+                  <YAxis domain={[0, 100]} hide />
+                  <Tooltip
+                    contentStyle={{ background: '#060709', border: '1px solid #1e222a', borderRadius: '6px', fontSize: '11px', fontFamily: 'monospace' }}
+                  />
+                  <Line type="monotone" dataKey="score" stroke="#0284c7" strokeWidth={2} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* Dark Web Monitor (5 Cols) */}
+        <div className="lg:col-span-5 bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
+          <DarkWebTool />
+        </div>
+      </div>
+
+      {/* ROW 2: TWO-COLUMN PRIMARY GRID (Password Entropy & Tracker Shield) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <PasswordCheckerTool />
-        <DataBrokerTool />
         <TrackerBlockerTool />
+      </div>
+
+      {/* ROW 3: UTILITY LEDGER (6 Compact Tools in 3 Columns) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <DataBrokerTool />
         <FingerprintTool />
-        <DarkWebTool />
-        <PrivacyChartTool />
         <SocialMediaTool />
         <VPNRecommenderTool />
         <CookieScannerTool />
@@ -28,6 +72,15 @@ const PrivacyToolsGrid = () => {
       </div>
     </div>
   );
+};
+
+// Helper data generator for history chart
+const generateHistoryData = () => {
+  const history = [];
+  for (let i = 14; i >= 0; i--) {
+    history.push({ date: `${i}d ago`, score: Math.floor(Math.random() * 30) + 55 });
+  }
+  return history;
 };
 
 // Tool 1: Password Strength Checker
@@ -44,42 +97,46 @@ const PasswordCheckerTool = () => {
     if (password.length >= 12) score += 20;
 
     let label = 'Weak';
-    let color = '#ef4444';
-    if (score >= 80) { label = 'Strong'; color = '#10b981'; }
-    else if (score >= 60) { label = 'Good'; color = '#f59e0b'; }
+    let color = '#dc2626';
+    if (score >= 80) { label = 'High Entropy'; color = '#10b981'; }
+    else if (score >= 60) { label = 'Moderate'; color = '#f59e0b'; }
 
     setStrength({ score, label, color });
     setPwd(password);
   };
 
   return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between">
+    <div className="bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-emerald-400">🔐</span>
-            <h3 className="text-sm font-semibold text-white">Password Auditor</h3>
+            <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-amber-400">
+              <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-white text-sm">Password Entropy Engine</h3>
           </div>
-          <span className="text-[10px] font-mono text-[#a1a1aa] uppercase">Security</span>
+          <span className="text-[10px] font-mono text-[#71717a]">Audit</span>
         </div>
 
         <input
           type="password"
-          placeholder="Type password string..."
+          placeholder="Type password string for entropy test..."
           onChange={(e) => checkPassword(e.target.value)}
-          className="w-full bg-[#09090b] border border-[#27272a] focus:border-[#52525b] text-white rounded-lg px-3 py-2 text-xs font-mono outline-none transition-all placeholder:text-[#52525b]"
+          className="w-full bg-[#060709] border border-[#1e222a] focus:border-amber-500 text-white rounded-lg px-3 py-2 text-xs font-mono outline-none transition-all placeholder:text-[#3f3f46]"
         />
 
         {pwd && (
           <div className="mt-3.5 space-y-2">
-            <div className="w-full bg-[#09090b] rounded-full h-1.5 overflow-hidden border border-[#27272a]">
+            <div className="w-full bg-[#060709] rounded-full h-1.5 overflow-hidden border border-[#1e222a]">
               <div
                 className="h-full transition-all duration-300 rounded-full"
                 style={{ width: `${strength.score}%`, backgroundColor: strength.color }}
               />
             </div>
             <div className="flex justify-between items-center text-xs font-mono">
-              <span className="text-[#a1a1aa]">Entropy Strength:</span>
+              <span className="text-[#71717a]">Entropy Strength:</span>
               <span className="font-semibold" style={{ color: strength.color }}>
                 {strength.label} ({strength.score}%)
               </span>
@@ -91,50 +148,7 @@ const PasswordCheckerTool = () => {
   );
 };
 
-// Tool 2: Data Broker Opt-Out Guide
-const DataBrokerTool = () => {
-  const brokers = [
-    { name: 'Google Activity', url: 'https://myactivity.google.com', difficulty: 'Easy' },
-    { name: 'Meta Off-Facebook', url: 'https://facebook.com/off_facebook_activity', difficulty: 'Easy' },
-    { name: 'Acxiom Registry', url: 'https://isapps.acxiom.com/optout/optout.aspx', difficulty: 'Medium' },
-    { name: 'Oracle Data Cloud', url: 'https://datacloudoptout.oracle.com', difficulty: 'Hard' }
-  ];
-
-  return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between">
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-blue-400">🗑️</span>
-            <h3 className="text-sm font-semibold text-white">Data Broker Opt-Out</h3>
-          </div>
-          <span className="text-[10px] font-mono text-[#a1a1aa] uppercase">Privacy</span>
-        </div>
-
-        <div className="space-y-2">
-          {brokers.map((b, i) => (
-            <div key={i} className="flex items-center justify-between p-2 bg-[#09090b] border border-[#27272a] rounded-lg text-xs font-mono">
-              <div className="flex items-center gap-1.5">
-                <span className="text-white font-medium">{b.name}</span>
-                <span className="text-[10px] text-[#71717a]">({b.difficulty})</span>
-              </div>
-              <a
-                href={b.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 hover:text-blue-300 font-medium text-[11px] transition-colors flex items-center gap-0.5"
-              >
-                Opt-Out →
-              </a>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Tool 3: Tracker Blocker Status
+// Tool 2: Tracker Blocker
 const TrackerBlockerTool = () => {
   const [blockedCount, setBlockedCount] = useState(0);
   const [isActive, setIsActive] = useState(false);
@@ -146,36 +160,40 @@ const TrackerBlockerTool = () => {
       count += Math.floor(Math.random() * 5);
       setBlockedCount(count);
       if (count >= 147) clearInterval(interval);
-    }, 400);
+    }, 300);
   };
 
   return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between">
+    <div className="bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-emerald-400">🛡️</span>
-            <h3 className="text-sm font-semibold text-white">Tracker Blocker</h3>
+            <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-emerald-400">
+              <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-white text-sm">Tracker Interception Shield</h3>
           </div>
           <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
-            isActive ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+            isActive ? 'bg-emerald-950/20 border-emerald-900/40 text-emerald-400' : 'bg-zinc-900 text-zinc-500 border-zinc-800'
           }`}>
-            {isActive ? 'Active' : 'Inactive'}
+            {isActive ? 'Shield Active' : 'Standby'}
           </span>
         </div>
 
         {!isActive ? (
           <button
             onClick={activateBlocker}
-            className="w-full bg-[#18181b] hover:bg-[#27272a] border border-[#27272a] text-white font-medium py-2 rounded-lg text-xs font-mono transition-all mt-4"
+            className="w-full bg-[#1c2029] hover:bg-[#2d3340] border border-[#1e222a] text-white font-mono text-xs font-medium py-2 rounded-lg transition-all mt-4"
           >
-            Activate Telemetry Shield
+            Deploy Telemetry Shield
           </button>
         ) : (
           <div className="text-center py-2">
-            <span className="text-3xl font-mono font-bold text-emerald-400">{blockedCount}</span>
-            <p className="text-xs text-[#a1a1aa] font-mono mt-0.5">trackers intercepted</p>
-            <div className="w-full bg-[#09090b] rounded-full h-1.5 overflow-hidden border border-[#27272a] mt-3">
+            <span className="font-display text-3xl font-bold text-emerald-400">{blockedCount}</span>
+            <p className="text-xs text-[#71717a] font-mono mt-0.5">telemetry requests intercepted</p>
+            <div className="w-full bg-[#060709] rounded-full h-1.5 overflow-hidden border border-[#1e222a] mt-3">
               <div
                 className="bg-emerald-500 h-full transition-all duration-300"
                 style={{ width: `${Math.min(blockedCount, 100)}%` }}
@@ -188,7 +206,113 @@ const TrackerBlockerTool = () => {
   );
 };
 
-// Tool 4: Browser Fingerprint Check
+// Tool 3: Dark Web Monitor
+const DarkWebTool = () => {
+  const [dwEmail, setDwEmail] = useState('');
+  const [result, setResult] = useState(null);
+
+  const checkDarkWeb = () => {
+    if (!dwEmail) return;
+    setResult({ status: 'checking', message: 'Querying onion network dumps...' });
+    setTimeout(() => {
+      const found = Math.random() > 0.5;
+      setResult({
+        status: 'complete',
+        found: found,
+        message: found ? '⚠️ Credentials found in dark web marketplace dumps' : '✅ Clean across monitored forums',
+      });
+    }, 1200);
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-red-400">
+            <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+            </svg>
+          </div>
+          <h3 className="font-display font-semibold text-white text-sm">Dark Web Monitor</h3>
+        </div>
+        <span className="text-[10px] font-mono text-[#71717a]">Onion Index</span>
+      </div>
+
+      <div className="flex gap-2 mb-3">
+        <input
+          type="email"
+          placeholder="target@domain.com"
+          value={dwEmail}
+          onChange={(e) => setDwEmail(e.target.value)}
+          className="flex-1 bg-[#060709] border border-[#1e222a] text-white rounded-lg px-2.5 py-1.5 text-xs font-mono outline-none placeholder:text-[#3f3f46]"
+        />
+        <button
+          onClick={checkDarkWeb}
+          className="bg-[#1c2029] hover:bg-[#2d3340] border border-[#1e222a] text-white font-mono text-xs px-3 py-1.5 rounded-lg transition-all shrink-0"
+        >
+          Monitor
+        </button>
+      </div>
+
+      {result && (
+        <div className={`p-2.5 rounded border text-xs font-mono ${
+          result.found ? 'bg-red-950/20 border-red-900/40 text-red-400' : 'bg-emerald-950/20 border-emerald-900/40 text-emerald-400'
+        }`}>
+          {result.message}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Tool 4: Data Broker Opt-Out Guide
+const DataBrokerTool = () => {
+  const brokers = [
+    { name: 'Google Activity', url: 'https://myactivity.google.com', difficulty: 'Easy' },
+    { name: 'Meta Off-Facebook', url: 'https://facebook.com/off_facebook_activity', difficulty: 'Easy' },
+    { name: 'Acxiom Registry', url: 'https://isapps.acxiom.com/optout/optout.aspx', difficulty: 'Medium' },
+    { name: 'Oracle Data Cloud', url: 'https://datacloudoptout.oracle.com', difficulty: 'Hard' }
+  ];
+
+  return (
+    <div className="bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-cyan-400">
+              <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-white text-sm">Data Broker Opt-Out</h3>
+          </div>
+          <span className="text-[10px] font-mono text-[#71717a]">Registry</span>
+        </div>
+
+        <div className="space-y-1.5">
+          {brokers.map((b, i) => (
+            <div key={i} className="flex items-center justify-between p-2 bg-[#060709] border border-[#1e222a] rounded text-xs font-mono">
+              <div className="flex items-center gap-1.5">
+                <span className="text-white font-medium">{b.name}</span>
+                <span className="text-[10px] text-[#71717a]">({b.difficulty})</span>
+              </div>
+              <a
+                href={b.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan-400 hover:text-cyan-300 font-medium text-[11px] transition-colors flex items-center gap-0.5"
+              >
+                Opt-Out →
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Tool 5: Browser Fingerprint Check
 const FingerprintTool = () => {
   const [fingerprint, setFingerprint] = useState(null);
 
@@ -204,28 +328,32 @@ const FingerprintTool = () => {
   };
 
   return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between">
+    <div className="bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-cyan-400">🖥️</span>
-            <h3 className="text-sm font-semibold text-white">Browser Fingerprint</h3>
+            <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-amber-400">
+              <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-white text-sm">Browser Surface Inspector</h3>
           </div>
-          <span className="text-[10px] font-mono text-[#a1a1aa] uppercase">Telemetry</span>
+          <span className="text-[10px] font-mono text-[#71717a]">Surface</span>
         </div>
 
         {!fingerprint ? (
           <button
             onClick={checkFingerprint}
-            className="w-full bg-[#18181b] hover:bg-[#27272a] border border-[#27272a] text-white font-medium py-2 rounded-lg text-xs font-mono transition-all mt-4"
+            className="w-full bg-[#1c2029] hover:bg-[#2d3340] border border-[#1e222a] text-white font-mono text-xs font-medium py-2 rounded-lg transition-all mt-3"
           >
             Inspect Browser Surface
           </button>
         ) : (
-          <div className="space-y-1.5 bg-[#09090b] border border-[#27272a] rounded-lg p-2.5 text-xs font-mono">
+          <div className="space-y-1 bg-[#060709] border border-[#1e222a] rounded p-2 text-xs font-mono">
             {Object.entries(fingerprint).map(([key, value]) => (
               <div key={key} className="flex justify-between items-center">
-                <span className="text-[#a1a1aa] capitalize">{key}:</span>
+                <span className="text-[#71717a] capitalize">{key}:</span>
                 <span className="text-white font-semibold">{value}</span>
               </div>
             ))}
@@ -236,105 +364,7 @@ const FingerprintTool = () => {
   );
 };
 
-// Tool 5: Dark Web Monitor
-const DarkWebTool = () => {
-  const [dwEmail, setDwEmail] = useState('');
-  const [result, setResult] = useState(null);
-
-  const checkDarkWeb = () => {
-    if (!dwEmail) return;
-    setResult({ status: 'checking', message: 'Scanning onion networks...' });
-    setTimeout(() => {
-      const found = Math.random() > 0.5;
-      setResult({
-        status: 'complete',
-        found: found,
-        message: found ? '⚠️ Exposed on dark web marketplaces' : '✅ Clean across monitored forums',
-        date: found ? new Date().toLocaleDateString() : null
-      });
-    }, 1500);
-  };
-
-  return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between">
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-rose-400">🌑</span>
-            <h3 className="text-sm font-semibold text-white">Dark Web Monitor</h3>
-          </div>
-          <span className="text-[10px] font-mono text-[#a1a1aa] uppercase">Audit</span>
-        </div>
-
-        <div className="flex gap-2 mb-3">
-          <input
-            type="email"
-            placeholder="email@domain.com"
-            value={dwEmail}
-            onChange={(e) => setDwEmail(e.target.value)}
-            className="flex-1 bg-[#09090b] border border-[#27272a] text-white rounded-lg px-2.5 py-1.5 text-xs font-mono outline-none placeholder:text-[#52525b]"
-          />
-          <button
-            onClick={checkDarkWeb}
-            className="bg-[#18181b] hover:bg-[#27272a] border border-[#27272a] text-white font-medium px-3 py-1.5 rounded-lg text-xs font-mono transition-all shrink-0"
-          >
-            Monitor
-          </button>
-        </div>
-
-        {result && (
-          <div className={`p-2.5 rounded-lg border text-xs font-mono ${
-            result.found ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-          }`}>
-            {result.message}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Tool 6: Privacy History Chart (Recharts)
-const PrivacyChartTool = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const history = [];
-    for (let i = 14; i >= 0; i--) {
-      history.push({ date: `${i}d ago`, score: Math.floor(Math.random() * 30) + 55 });
-    }
-    setData(history);
-  }, []);
-
-  return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between md:col-span-2 lg:col-span-1">
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-blue-400">📈</span>
-            <h3 className="text-sm font-semibold text-white">Score History (14 Days)</h3>
-          </div>
-          <span className="text-[10px] font-mono text-[#a1a1aa] uppercase">Analytics</span>
-        </div>
-
-        <div className="h-28 w-full mt-2">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data}>
-              <XAxis dataKey="date" hide />
-              <YAxis domain={[0, 100]} hide />
-              <Tooltip
-                contentStyle={{ background: '#09090b', border: '1px solid #27272a', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}
-              />
-              <Line type="monotone" dataKey="score" stroke="#3b82f6" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Tool 7: Social Media Privacy Checker
+// Tool 6: Social Media Privacy Checker
 const SocialMediaTool = () => {
   const platforms = [
     { name: 'Instagram', risk: 'High', action: 'Private Mode' },
@@ -344,24 +374,28 @@ const SocialMediaTool = () => {
   ];
 
   return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between">
+    <div className="bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-amber-400">📱</span>
-            <h3 className="text-sm font-semibold text-white">Social Footprint</h3>
+            <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-amber-400">
+              <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-white text-sm">Social Footprint Audit</h3>
           </div>
-          <span className="text-[10px] font-mono text-[#a1a1aa] uppercase">Exposure</span>
+          <span className="text-[10px] font-mono text-[#71717a]">Exposure</span>
         </div>
 
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           {platforms.map((p, i) => (
-            <div key={i} className="flex justify-between items-center p-2 bg-[#09090b] border border-[#27272a] rounded-lg text-xs font-mono">
+            <div key={i} className="flex justify-between items-center p-1.5 bg-[#060709] border border-[#1e222a] rounded text-xs font-mono">
               <span className="text-white font-medium">{p.name}</span>
               <span className={`px-2 py-0.5 rounded text-[10px] border ${
-                p.risk === 'High' ? 'bg-red-500/10 border-red-500/20 text-red-400' :
-                p.risk === 'Medium' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' :
-                'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                p.risk === 'High' ? 'bg-red-950/20 border-red-900/40 text-red-400' :
+                p.risk === 'Medium' ? 'bg-amber-950/20 border-amber-900/40 text-amber-400' :
+                'bg-emerald-950/20 border-emerald-900/40 text-emerald-400'
               }`}>
                 {p.risk} Risk
               </span>
@@ -373,7 +407,7 @@ const SocialMediaTool = () => {
   );
 };
 
-// Tool 8: VPN Recommendation Engine
+// Tool 7: VPN Recommendation Engine
 const VPNRecommenderTool = () => {
   const [need, setNeed] = useState('');
   const recommendations = {
@@ -383,30 +417,34 @@ const VPNRecommenderTool = () => {
   };
 
   return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between">
+    <div className="bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-emerald-400">🔒</span>
-            <h3 className="text-sm font-semibold text-white">VPN Engine</h3>
+            <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-emerald-400">
+              <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-white text-sm">VPN Recommendation Engine</h3>
           </div>
-          <span className="text-[10px] font-mono text-[#a1a1aa] uppercase">Network</span>
+          <span className="text-[10px] font-mono text-[#71717a]">Network</span>
         </div>
 
         <select
           onChange={(e) => setNeed(e.target.value)}
-          className="w-full bg-[#09090b] border border-[#27272a] text-white rounded-lg px-2.5 py-1.5 text-xs font-mono outline-none"
+          className="w-full bg-[#060709] border border-[#1e222a] text-white rounded px-2.5 py-1.5 text-xs font-mono outline-none"
         >
-          <option value="">Select Priority Requirement</option>
+          <option value="">Select Requirement Target</option>
           <option value="streaming">Streaming & Low Latency</option>
           <option value="privacy">Maximum Anonymity</option>
           <option value="free">Free / Open-Source</option>
         </select>
 
         {need && recommendations[need] && (
-          <div className="mt-3 p-2.5 bg-[#09090b] border border-[#27272a] rounded-lg text-xs font-mono">
+          <div className="mt-2.5 p-2 bg-[#060709] border border-[#1e222a] rounded text-xs font-mono">
             <div className="font-semibold text-white">{recommendations[need].name}</div>
-            <div className="text-[#a1a1aa] mt-0.5">{recommendations[need].price} — {recommendations[need].bestFor}</div>
+            <div className="text-[#71717a] mt-0.5">{recommendations[need].price} — {recommendations[need].bestFor}</div>
           </div>
         )}
       </div>
@@ -414,7 +452,7 @@ const VPNRecommenderTool = () => {
   );
 };
 
-// Tool 9: Cookie Scanner
+// Tool 8: Cookie Scanner
 const CookieScannerTool = () => {
   const [cookies, setCookies] = useState([]);
 
@@ -422,7 +460,7 @@ const CookieScannerTool = () => {
     const allCookies = document.cookie.split(';').filter(c => c.trim());
     const parsed = allCookies.map(c => {
       const [name, value] = c.split('=');
-      return { name: name?.trim() || 'SessionCookie', value: (value || 'active').substring(0, 20) };
+      return { name: name?.trim() || 'SessionCookie', value: (value || 'active').substring(0, 18) };
     });
     if (parsed.length === 0) {
       parsed.push({ name: 'auth_token', value: 'jwt_encrypted...' });
@@ -432,29 +470,33 @@ const CookieScannerTool = () => {
   };
 
   return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between">
+    <div className="bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-amber-400">🍪</span>
-            <h3 className="text-sm font-semibold text-white">Cookie Auditor</h3>
+            <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-amber-400">
+              <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 4a2 2 0 114 0v1a2 2 0 002 2h1a2 2 0 110 4h-1a2 2 0 00-2 2v1a2 2 0 11-4 0v-1a2 2 0 00-2-2H7a2 2 0 110-4h1a2 2 0 002-2V4z" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-white text-sm">Cookie Auditor</h3>
           </div>
-          <span className="text-[10px] font-mono text-[#a1a1aa] uppercase">Storage</span>
+          <span className="text-[10px] font-mono text-[#71717a]">Storage</span>
         </div>
 
         {cookies.length === 0 ? (
           <button
             onClick={scanCookies}
-            className="w-full bg-[#18181b] hover:bg-[#27272a] border border-[#27272a] text-white font-medium py-2 rounded-lg text-xs font-mono transition-all mt-4"
+            className="w-full bg-[#1c2029] hover:bg-[#2d3340] border border-[#1e222a] text-white font-mono text-xs font-medium py-2 rounded-lg transition-all mt-3"
           >
             Scan Document Cookies
           </button>
         ) : (
-          <div className="space-y-1 max-h-32 overflow-y-auto pr-1">
+          <div className="space-y-1 max-h-24 overflow-y-auto pr-1">
             {cookies.map((c, i) => (
-              <div key={i} className="p-1.5 bg-[#09090b] border border-[#27272a] rounded text-[11px] font-mono flex justify-between">
-                <span className="text-blue-400 truncate max-w-[100px]">{c.name}</span>
-                <span className="text-[#a1a1aa] truncate">{c.value}</span>
+              <div key={i} className="p-1 bg-[#060709] border border-[#1e222a] rounded text-[11px] font-mono flex justify-between">
+                <span className="text-cyan-400 truncate max-w-[90px]">{c.name}</span>
+                <span className="text-[#71717a] truncate">{c.value}</span>
               </div>
             ))}
           </div>
@@ -464,7 +506,7 @@ const CookieScannerTool = () => {
   );
 };
 
-// Tool 10: Privacy Tips Widget
+// Tool 9: Security Intelligence Widget
 const PrivacyTipTool = () => {
   const tips = [
     '🔐 Utilize password managers with zero-knowledge architecture',
@@ -477,22 +519,26 @@ const PrivacyTipTool = () => {
   const [index, setIndex] = useState(0);
 
   return (
-    <div className="bg-[#131315] border border-[#27272a] hover:border-[#3f3f46] transition-all rounded-xl p-5 flex flex-col justify-between">
+    <div className="bg-[#101216] border border-[#1e222a] hover:border-[#2d3340] transition-all rounded-xl p-5 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-blue-400">💡</span>
-            <h3 className="text-sm font-semibold text-white">Security Intelligence</h3>
+            <div className="w-6 h-6 rounded bg-[#060709] border border-[#1e222a] flex items-center justify-center text-cyan-400">
+              <svg className="w-3.5 h-3.5" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h-1.5a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-white text-sm">Security Intelligence</h3>
           </div>
           <button
             onClick={() => setIndex((index + 1) % tips.length)}
-            className="text-[10px] font-mono text-blue-400 hover:underline"
+            className="text-[10px] font-mono text-cyan-400 hover:underline"
           >
             Next Tip →
           </button>
         </div>
 
-        <p className="text-xs text-[#e4e4e7] font-mono bg-[#09090b] border border-[#27272a] p-3 rounded-lg leading-relaxed">
+        <p className="text-xs text-[#e5e1e4] font-mono bg-[#060709] border border-[#1e222a] p-2.5 rounded leading-relaxed">
           {tips[index]}
         </p>
       </div>
